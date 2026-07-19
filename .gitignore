@@ -1,0 +1,48 @@
+# ===== 大文件 / 模型权重（绝对不要提交）=====
+*.ckpt
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+*.onnx
+checkpoints/
+ckpts/
+outputs/
+saves/
+models/
+Qwen3-0.6B/
+*.h5
+*.msgpack
+
+# ===== 数据集（视情况，通常太大不入库）=====
+data/**/*.jsonl
+data/**/*.json
+data/**/*.parquet
+data/**/*.arrow
+*.csv
+
+# ===== 训练产物 / 日志 =====
+wandb/
+runs/
+logs/
+*.log
+tensorboard/
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+.python-version
+
+# ===== 系统 / 编辑器 =====
+.DS_Store
+.idea/
+.vscode/
+
+# ===== Claude 本地状态（记忆、会话，不上传）=====
+.claude/
