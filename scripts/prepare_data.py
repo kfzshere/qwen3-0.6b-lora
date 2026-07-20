@@ -21,6 +21,8 @@ def main():
     ap.add_argument("--n_general", type=int, default=3000)
     ap.add_argument("--out_name", default="mixed_sft_v1")
     ap.add_argument("--math_rs", default="", help="拒绝采样数学数据(json)，给了就用它替代原始GSM8K")
+    ap.add_argument("--benign", default="", help="良性对照数据(json, FalseReject)，治过度拒答")
+    ap.add_argument("--n_benign", type=int, default=0)
     args = ap.parse_args()
     random.seed(42)
     ds = os.path.join(args.base, "datasets")
@@ -55,6 +57,14 @@ def main():
                 "output": d["output"], "task": "general"} for d in alp[:args.n_general]]
 
     mixed = safety + math + general
+    # 良性对照（治过度拒答）：看着敏感但无害 -> 正常帮忙答
+    if args.benign and args.n_benign > 0:
+        bn = json.load(open(args.benign))
+        random.shuffle(bn)
+        benign = [{"instruction": d["instruction"], "input": d.get("input", ""),
+                   "output": d["output"], "task": "safety_benign"}
+                  for d in bn[:args.n_benign]]
+        mixed = mixed + benign
     random.shuffle(mixed)
     out_file = f"{out_dir}/{args.out_name}.json"
     json.dump(mixed, open(out_file, "w"), ensure_ascii=False, indent=1)
