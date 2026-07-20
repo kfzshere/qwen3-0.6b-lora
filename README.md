@@ -16,7 +16,9 @@
 | [夏令营考核.md](夏令营考核.md) | 原始考核要求 |
 | [eval/](eval/) | 评测框架（三方向 + 并行启动器）+ [基线记录](eval/BASELINE.md) |
 
-> 建议阅读顺序：新手先看 `新手入门指南.md` → 再看 `第一部分实施方案.md`。
+> 建议阅读顺序：新手先看 `新手入门指南.md` → 再看 `第一部分实施方案.md` → 实验细节看 [`eval/EXPERIMENTS.md`](eval/EXPERIMENTS.md)。
+
+**实验记录**：[eval/EXPERIMENTS.md](eval/EXPERIMENTS.md)（6版完整详录：数据集/配比/测试集/动机/结论）· [eval/RESULTS.md](eval/RESULTS.md)（结果表）· [eval/RESEARCH_NOTES.md](eval/RESEARCH_NOTES.md)（headroom与安全评分口径调研）
 
 ---
 
