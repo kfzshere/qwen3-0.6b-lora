@@ -23,6 +23,7 @@ def main():
     ap.add_argument("--math_rs", default="", help="拒绝采样数学数据(json)，给了就用它替代原始GSM8K")
     ap.add_argument("--benign", default="", help="良性对照数据(json, FalseReject)，治过度拒答")
     ap.add_argument("--n_benign", type=int, default=0)
+    ap.add_argument("--general_src", default="", help="通用数据源(json)，默认用 Alpaca，可换 Tulu3 等")
     args = ap.parse_args()
     random.seed(42)
     ds = os.path.join(args.base, "datasets")
@@ -50,8 +51,9 @@ def main():
                  "output": clean_gsm8k(r["answer"]), "task": "math"}
                 for r in rows[:args.n_math]]
 
-    # 3. 通用：Alpaca replay
-    alp = json.load(open(f"{ds}/general/alpaca_cleaned_3000.json"))
+    # 3. 通用：Alpaca replay（或指定的更优质通用集，如 Tulu3）
+    alp = json.load(open(args.general_src)) if args.general_src \
+        else json.load(open(f"{ds}/general/alpaca_cleaned_3000.json"))
     random.shuffle(alp)
     general = [{"instruction": d["instruction"], "input": d.get("input", ""),
                 "output": d["output"], "task": "general"} for d in alp[:args.n_general]]
