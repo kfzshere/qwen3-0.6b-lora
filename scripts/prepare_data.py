@@ -20,6 +20,7 @@ def main():
     ap.add_argument("--n_math", type=int, default=3000)
     ap.add_argument("--n_general", type=int, default=3000)
     ap.add_argument("--out_name", default="mixed_sft_v1")
+    ap.add_argument("--math_rs", default="", help="拒绝采样数学数据(json)，给了就用它替代原始GSM8K")
     args = ap.parse_args()
     random.seed(42)
     ds = os.path.join(args.base, "datasets")
@@ -34,12 +35,18 @@ def main():
     safety = [{"instruction": d["prompt"], "input": "", "output": d["response"],
                "task": "safety"} for d in aegis[:args.n_safety]]
 
-    # 2. 数学：GSM8K 短 CoT
-    rows = pq.read_table(f"{ds}/math/gsm8k_train.parquet").to_pylist()
-    random.shuffle(rows)
-    math = [{"instruction": r["question"] + MATH_HINT, "input": "",
-             "output": clean_gsm8k(r["answer"]), "task": "math"}
-            for r in rows[:args.n_math]]
+    # 2. 数学：GSM8K 短 CoT，或拒绝采样的原生风格正确解答
+    if args.math_rs:
+        rs = json.load(open(args.math_rs))
+        random.shuffle(rs)
+        math = [{"instruction": d["instruction"], "input": "",
+                 "output": d["output"], "task": "math"} for d in rs[:args.n_math]]
+    else:
+        rows = pq.read_table(f"{ds}/math/gsm8k_train.parquet").to_pylist()
+        random.shuffle(rows)
+        math = [{"instruction": r["question"] + MATH_HINT, "input": "",
+                 "output": clean_gsm8k(r["answer"]), "task": "math"}
+                for r in rows[:args.n_math]]
 
     # 3. 通用：Alpaca replay
     alp = json.load(open(f"{ds}/general/alpaca_cleaned_3000.json"))

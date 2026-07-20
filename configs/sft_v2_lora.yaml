@@ -1,0 +1,35 @@
+### v2 混合 SFT：数学换成拒绝采样的原生风格正确解答，2 epoch（减轻安全侵蚀）
+### 从 qwen-demo/ 运行：llamafactory-cli train qwen3-0.6b-lora/configs/sft_v2_lora.yaml
+
+model_name_or_path: models/Qwen3-0.6B
+trust_remote_code: true
+
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_rank: 16
+lora_alpha: 32
+lora_target: all
+
+dataset: mixed_sft_v2
+dataset_dir: datasets/lf_data
+template: qwen3
+cutoff_len: 1024
+overwrite_cache: true
+preprocessing_num_workers: 8
+
+output_dir: ckpt/sft_v2_lora
+logging_steps: 20
+save_steps: 150
+save_total_limit: 6
+plot_loss: true
+overwrite_output_dir: true
+report_to: none
+
+per_device_train_batch_size: 16
+gradient_accumulation_steps: 2
+learning_rate: 1.0e-4
+num_train_epochs: 2.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.03
+bf16: true
