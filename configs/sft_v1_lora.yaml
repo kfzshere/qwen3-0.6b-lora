@@ -1,0 +1,40 @@
+### v1 混合 SFT（LoRA 打底，安全优先）
+### 从 qwen-demo/ 目录运行：llamafactory-cli train qwen3-0.6b-lora/configs/sft_v1_lora.yaml
+
+### model
+model_name_or_path: models/Qwen3-0.6B
+trust_remote_code: true
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_rank: 16
+lora_alpha: 32
+lora_target: all
+
+### dataset
+dataset: mixed_sft_v1
+dataset_dir: datasets/lf_data
+template: qwen3
+cutoff_len: 1024
+overwrite_cache: true
+preprocessing_num_workers: 8
+
+### output
+output_dir: ckpt/sft_v1_lora
+logging_steps: 20
+save_steps: 200
+save_total_limit: 5
+plot_loss: true
+overwrite_output_dir: true
+report_to: none
+
+### train
+per_device_train_batch_size: 16
+gradient_accumulation_steps: 2
+learning_rate: 1.0e-4
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.03
+bf16: true
