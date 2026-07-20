@@ -49,3 +49,6 @@ env/
 
 # ===== 系统提示词（含内网地址/密码/SSH 操作，严禁进公开仓库）=====
 CLAUDE.md
+
+# 数据集暂存（走内网 git data 分支中转，不入 main）
+_data_staging/
